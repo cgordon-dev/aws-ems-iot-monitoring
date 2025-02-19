@@ -1,0 +1,22 @@
+# Environment variables file
+.env
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Virtual environment directories
+.venv/
+venv/
+
+# AWS certificate and key files, if stored locally
+*.pem
+*.key
+
+# Other sensitive files
+secret*
