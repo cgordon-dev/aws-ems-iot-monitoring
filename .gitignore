@@ -20,3 +20,5 @@ venv/
 
 # Other sensitive files
 secret*
+
+.tfvars
