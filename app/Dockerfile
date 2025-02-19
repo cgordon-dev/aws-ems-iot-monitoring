@@ -1,9 +1,13 @@
-# app/Dockerfile
 FROM python:3.9-slim
 
 WORKDIR /app
 COPY requirements.txt .
-RUN pip install --upgrade pip && pip install -r requirements.txt
+
+# Upgrade pip, force-reinstall a compatible version of NumPy, then install the rest.
+RUN pip install --upgrade pip && \
+    pip install numpy==1.21.6 --force-reinstall && \
+    pip install -r requirements.txt
+
 COPY app.py .
 
 EXPOSE 8501

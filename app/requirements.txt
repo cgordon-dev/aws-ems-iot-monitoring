@@ -1,5 +1,5 @@
 streamlit==1.21.0
-pandas
+pandas==1.5.3
 altair
 boto3
-python-dotenv
+numpy==1.21.6
