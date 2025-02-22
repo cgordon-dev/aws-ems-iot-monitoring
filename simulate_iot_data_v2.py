@@ -4,39 +4,41 @@ simulate_iot_data.py
 
 Simulates IoT sensor data and publishes it to AWS IoT Core.
 This script uses the AWS IoT Device SDK for Python and retrieves
-the device's certificate and private key from AWS Secrets Manager.
+the device's certificate and private key from environment variables.
 It simulates multiple monitoring points at intervals based on the RTEM system design criteria,
 including unit-specific space temperature readings (bedroom, living room, kitchen) at 5‑minute intervals.
 """
 
+import os
 import json
 import random
 import time
 import datetime
 import threading
-import boto3
+from dotenv import load_dotenv
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 
-# ----- Helper to retrieve secrets from AWS Secrets Manager -----
-def get_secret(secret_name, region_name="us-east-1"):
-    client = boto3.client("secretsmanager", region_name=region_name)
-    get_secret_value_response = client.get_secret_value(SecretId=secret_name)
-    secret = get_secret_value_response["SecretString"]
-    return json.loads(secret)
+# Load environment variables from .env file
+load_dotenv()
 
-# ----- Retrieve IoT device credentials from Secrets Manager -----
-secret_name = "ems/iot_device_credentials"
-credentials = get_secret(secret_name)
-with open("/tmp/certificate.pem.crt", "w") as cert_file:
-    cert_file.write(credentials.get("certificate_pem"))
-with open("/tmp/private.pem.key", "w") as key_file:
-    key_file.write(credentials.get("private_key"))
+# Read IoT device credentials from environment variables
+IOT_CERTIFICATE = os.getenv("IOT_CERTIFICATE")
+IOT_PRIVATE_KEY = os.getenv("IOT_PRIVATE_KEY")
 
-# ----- Configuration Variables -----
-IOT_ENDPOINT = "<YOUR_IOT_ENDPOINT_FROM_TERRAFORM>"  # Replace with the output value from Terraform
+if not IOT_CERTIFICATE or not IOT_PRIVATE_KEY:
+    raise ValueError("IoT certificate or private key not set in environment variables.")
+
+# Write credentials to temporary files for AWSIoTPythonSDK
 CERTIFICATE_PATH = "/tmp/certificate.pem.crt"
 PRIVATE_KEY_PATH = "/tmp/private.pem.key"
-ROOT_CA_PATH = "/path/to/AmazonRootCA1.pem"  # Download AmazonRootCA1.pem from AWS IoT documentation
+with open(CERTIFICATE_PATH, "w") as cert_file:
+    cert_file.write(IOT_CERTIFICATE)
+with open(PRIVATE_KEY_PATH, "w") as key_file:
+    key_file.write(IOT_PRIVATE_KEY)
+
+# ----- Configuration Variables -----
+IOT_ENDPOINT = os.getenv("IOT_ENDPOINT")  # Replace with your AWS IoT endpoint from Terraform
+ROOT_CA_PATH = "/Users/bklynlyphe/Desktop/ems-simulated-device-docs/AmazonRootCA1.pem"  # Download AmazonRootCA1.pem from AWS IoT documentation
 
 # ----- Initialize the MQTT Client -----
 client = AWSIoTMQTTClient("ems-simulated-device")
@@ -50,8 +52,6 @@ client.configureMQTTOperationTimeout(5)
 client.connect()
 
 # ------------------ Simulation Functions ------------------
-
-# Building-Level Monitoring
 
 def simulate_building_main_panel():
     """Main Service Panel Energy Meter (1-minute interval)"""
@@ -91,8 +91,6 @@ def simulate_network_monitoring():
         client.publish("ems/building/network", json.dumps(data), 1)
         print("Published network monitoring data:", data)
         time.sleep(60)
-
-# Unit-Level Monitoring (for 4 Units)
 
 def simulate_unit_panel(unit_id):
     """Unit Main Distribution Panel Sub-Meter (1-minute interval)"""
@@ -168,8 +166,6 @@ def simulate_unit_space_temperature(unit_id, room):
         print(f"Published space temperature data for unit {unit_id} {room}:", data)
         time.sleep(300)
 
-# Common Areas Monitoring
-
 def simulate_common_lighting():
     """Common Hallways LED Lighting Circuit (1-minute interval)"""
     while True:
@@ -236,7 +232,6 @@ if __name__ == "__main__":
         threads.append(threading.Thread(target=simulate_unit_hvac, args=(unit_id,)))
         threads.append(threading.Thread(target=simulate_unit_dhw, args=(unit_id,)))
         threads.append(threading.Thread(target=simulate_unit_appliance, args=(unit_id,)))
-        # Space Temperature Threads for each room within the unit
         for room in ["bedroom", "living_room", "kitchen"]:
             threads.append(threading.Thread(target=simulate_unit_space_temperature, args=(unit_id, room)))
 

@@ -2,4 +2,5 @@ streamlit==1.21.0
 pandas==1.5.3
 altair
 boto3
-numpy==1.21.6
+numpy   #==1.21.6
+streamlit_autorefresh
