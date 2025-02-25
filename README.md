@@ -27,6 +27,17 @@ This repository provides a complete production-ready solution for an Energy Mana
 - Local machine with Linux/macOS (for Windows, use WSL)
 - Git to clone this repository
 
+### CI/CD Requirements
+
+For automated deployments via GitHub Actions, you'll need to configure these secrets:
+
+- `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`: AWS credentials with permissions to deploy resources
+- `AWS_REGION`: Region where resources will be deployed (default: us-east-1)
+- `ECR_REPO_URI`: URI of your Amazon ECR repository for the dashboard image
+- `TF_STATE_BUCKET`: S3 bucket for storing Terraform state
+- `TF_LOCK_TABLE`: DynamoDB table for Terraform state locking
+- `SLACK_WEBHOOK_URL` (optional): For deployment notifications
+
 ## Detailed Deployment Guide
 
 ### 1. Clone the Repository
