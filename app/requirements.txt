@@ -1,6 +1,8 @@
 streamlit==1.21.0
 pandas==1.5.3
-altair
-boto3
-numpy   #==1.21.6
-streamlit_autorefresh
+altair==5.0.1
+boto3==1.28.39
+numpy==1.21.6
+streamlit_autorefresh==0.0.3
+python-dotenv==1.0.0
+prometheus-client==0.17.1

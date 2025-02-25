@@ -19,5 +19,17 @@ variable "iot_policy_name" {
 variable "dynamodb_table_name" {
   description = "Name of the DynamoDB table to store sensor data"
   type        = string
-  default     = "SensorData"
+  default     = "sensor_data"  # Changed to match app.py and naming conventions
+}
+
+variable "environment" {
+  description = "Environment name (e.g., dev, staging, production)"
+  type        = string
+  default     = "production"
+}
+
+variable "project_name" {
+  description = "Project name for resource tagging"
+  type        = string
+  default     = "ems-iot-monitoring"
 }

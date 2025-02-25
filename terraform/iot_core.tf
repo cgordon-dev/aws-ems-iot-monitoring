@@ -19,12 +19,30 @@ resource "aws_iot_policy" "ems_policy" {
     {
       "Effect": "Allow",
       "Action": [
-        "iot:Publish",
-        "iot:Receive",
-        "iot:Connect",
+        "iot:Connect"
+      ],
+      "Resource": "arn:aws:iot:${var.region}:*:client/${var.iot_thing_name}"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Publish"
+      ],
+      "Resource": "arn:aws:iot:${var.region}:*:topic/ems/*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
         "iot:Subscribe"
       ],
-      "Resource": "*"
+      "Resource": "arn:aws:iot:${var.region}:*:topicfilter/ems/*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Receive"
+      ],
+      "Resource": "arn:aws:iot:${var.region}:*:topic/ems/*"
     }
   ]
 }
