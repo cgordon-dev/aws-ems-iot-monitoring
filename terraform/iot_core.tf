@@ -55,7 +55,7 @@ resource "aws_iot_policy_attachment" "ems_policy_attachment" {
 }
 
 resource "aws_iot_thing_principal_attachment" "ems_thing_attachment" {
-  thing_name = aws_iot_thing.ems_device.name
+  thing = aws_iot_thing.ems_device.name
   principal  = aws_iot_certificate.ems_certificate.arn
 }
 
