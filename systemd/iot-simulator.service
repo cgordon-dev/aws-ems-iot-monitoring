@@ -1,0 +1,20 @@
+[Unit]
+Description=AWS IoT Simulator Service
+After=network.target
+
+[Service]
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/opt/aws-ems-iot-monitoring
+ExecStart=/usr/bin/python3 /opt/aws-ems-iot-monitoring/simulate_iot_data_v2.py
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=iot-simulator
+Environment=PYTHONUNBUFFERED=1
+# Load environment variables from .env file
+EnvironmentFile=/opt/aws-ems-iot-monitoring/.env
+
+[Install]
+WantedBy=multi-user.target

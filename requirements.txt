@@ -1,0 +1,11 @@
+boto3==1.28.39
+AWSIoTPythonSDK==1.5.2
+python-dotenv==1.0.0
+requests==2.31.0
+# For the dashboard
+streamlit==1.21.0
+pandas==1.5.3
+altair==5.0.1
+numpy==1.21.6
+streamlit_autorefresh==0.0.3
+prometheus-client==0.17.1

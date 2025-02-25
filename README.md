@@ -120,13 +120,34 @@ aws secretsmanager create-secret \
 
 ### 7. Run the IoT Data Simulator
 
+You have two options to run the simulator:
+
+#### Option A: Run as a standalone script
 ```bash
 # Navigate back to project root
 cd ..
 
 # Start the simulator (ensure your .env file is properly configured)
 python simulate_iot_data.py
+
+# Or use the enhanced v2 simulator with more device types
+python simulate_iot_data_v2.py
 ```
+
+#### Option B: Install as a system service (Linux only)
+```bash
+# Make the installation script executable
+chmod +x systemd/install_service.sh
+
+# Run the installation script as root
+sudo ./systemd/install_service.sh
+```
+
+This will:
+- Install the simulator as a systemd service
+- Copy necessary files to /opt/aws-ems-iot-monitoring
+- Configure the service to start automatically on boot
+- Provide commands to manage and monitor the service
 
 The simulator will connect to AWS IoT Core using the credentials and start publishing simulated sensor data to various topics (`ems/building`, `ems/hvac`, etc.).
 
